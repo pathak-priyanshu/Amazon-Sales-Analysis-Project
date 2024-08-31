@@ -14,7 +14,7 @@ uncover valuable insights from the dataset.
 
 ## Dataset Overview
 
-The dataset used in this project consists of [insert number] rows of data, representing Amazon
+The dataset used in this project consists of [insert number ? ] rows of data, representing Amazon
 sales transactions. Along with the sales data, the dataset includes information about customers,
 products, orders, and returns. Before analysis, the dataset underwent preprocessing to handle
 missing values and ensure data quality.
