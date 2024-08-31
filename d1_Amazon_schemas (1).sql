@@ -1,9 +1,7 @@
--- SQL Live Workshop
-
--- Day 01 of SQL Workshop SCHEMA 
+-- PostgreSQL
 
 
--- create a new database load the script and press run button
+-- Create a new database load the script and press run button:
 
 
 -- JUST PRESS RUN BUTTON
@@ -23,7 +21,7 @@
 
 
     
--- creating customers table
+-- Creating customers table
 DROP TABLE IF EXISTS customers;
 CREATE TABLE customers (
                             customer_id VARCHAR(25) PRIMARY KEY,
@@ -32,7 +30,7 @@ CREATE TABLE customers (
 );
 
 
--- creating sellers table
+-- Creating sellers table
 DROP TABLE IF EXISTS sellers;
 CREATE TABLE sellers (
                         seller_id VARCHAR(25) PRIMARY KEY,
@@ -40,7 +38,7 @@ CREATE TABLE sellers (
 );
 
 
--- creating products table
+-- Creating products table
 DROP TABLE IF EXISTS products;
 CREATE TABLE products (
                         product_id VARCHAR(25) PRIMARY KEY,
@@ -51,7 +49,7 @@ CREATE TABLE products (
 
 
 
--- creating orders table
+-- Creating orders table
 DROP TABLE IF EXISTS orders;
 CREATE TABLE orders (
                         order_id VARCHAR(25) PRIMARY KEY,
@@ -73,7 +71,7 @@ CREATE TABLE orders (
 
 
 
--- creating returns table
+-- Creating returns table
 DROP TABLE IF EXISTS returns;
 CREATE TABLE returns (
                        return_id VARCHAR(25) PRIMARY KEY,
