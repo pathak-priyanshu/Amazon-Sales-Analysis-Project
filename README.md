@@ -30,16 +30,50 @@ analysis techniques:
 
 1. Find out the top 5 customers who made the highest profits.
 ```sql
-– paste your code here
+select order_id,
+		customer_id,
+		customer_name,
+		tot_Sale ,
+	    tot_Sale- cogs_actual as profit
+from 
+(select o.order_id,
+		o.customer_id,
+		c.customer_name,
+		sum(sale) as tot_Sale,
+		p.cogs * o.quantity as cogs_actual
+from orders as o
+inner join customers as c
+on o.customer_id = c.customer_id
+inner join products as p
+on o.product_id = p.product_id
+group by 1,2,3,5) as t1
+order by profit desc
+limit 5
 ```
 
 2. Find out the average quantity ordered per category.
-```sql
+```
+select 
+		category,
+		count(order_id) as cat_cnt,
+		avg(quantity) as avg_qty_odr
+from orders
+where  category is not null
+group by 1
+order by 2 desc,3 desc
 
 ```
-
 3. Identify the top 5 products that have generated the highest revenue.
-```sql
+```
+select o.product_id,
+       p.product_name,
+	   sum(o.sale) as tot_rev
+from orders as o
+inner join products as p
+on o.product_id = p.product_id
+group by 1,2
+order by 3 desc
+limit 5
 
 ```
 
@@ -49,27 +83,82 @@ analysis techniques:
 ```
 
 5. Identify the highest profitable sub-category.
-```sql
+```
+select sub_category,
+       (tot_rev-tot_cog) as sub_cat_profit
+from  
+         (select  
+		            o.sub_category,
+		            sum(o.sale) as tot_rev,
+		            sum(p.cogs*o.quantity) as tot_cog
+                from orders as o
+                left join products as p 
+                on o.product_id = p.product_id
+                group by 1
+          ) as t1
+order by 2 desc
+limit 5
 
 ```
 
 6. Find out the states with the highest total orders.
-```sql
+```
+select 
+      cx.state,
+	  count(o.order_id) as odr_qty,
+	  sum(o.sale) as tot_Rev
+from orders as o
+join customers as cx
+on o.customer_id = cx.customer_id
+group by 1
+order by 2 desc
+limit 1
 
 ```
 
 7. Determine the month with the highest number of orders.
-```sql
+```
+select 
+       to_char ( order_date ,'month') as mnts,
+	   extract(month from order_date ) as mnt_num,
+       count(*) as odr_qty 
+from orders 
+group by 1,2
+order by 3 desc
 
 ```
 
 8. Calculate the profit margin percentage for each sale (Profit divided by Sales).
-```sql
+```
+select order_id,
+       (sale-org_cogs)* 100 /sale::numeric  as profit_margin_percet
+from 
+(select order_id,
+      sale,
+	  p.cogs*o.quantity as org_cogs
+	  
+from orders as o
+join products as p 
+on o.product_id = p.product_id) as t1
 
 ```
 
 9. Calculate the percentage contribution of each sub-category.
-```sql
+```
+with cte1 
+as 
+(
+   select 
+          sum(sale) as overall_rev
+   from orders
+)
+select sub_category,
+       sum(sale) as cat_rev,
+	   sum(sale)/(select overall_rev from cte1) *100 as percent_contri
+from orders
+group by 1
+order by 3 desc
+
 
 ```
 
