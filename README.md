@@ -52,7 +52,7 @@ limit 5
 ```
 
 2. Find out the average quantity ordered per category.
-```
+```sql
 select 
 		category,
 		count(order_id) as cat_cnt,
