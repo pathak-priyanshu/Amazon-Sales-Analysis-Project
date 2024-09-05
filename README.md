@@ -64,7 +64,7 @@ order by 2 desc,3 desc
 
 ```
 3. Identify the top 5 products that have generated the highest revenue.
-```
+```sql
 select o.product_id,
        p.product_name,
 	   sum(o.sale) as tot_rev
@@ -83,7 +83,7 @@ limit 5
 ```
 
 5. Identify the highest profitable sub-category.
-```
+```sql
 select sub_category,
        (tot_rev-tot_cog) as sub_cat_profit
 from  
@@ -102,7 +102,7 @@ limit 5
 ```
 
 6. Find out the states with the highest total orders.
-```
+```sql
 select 
       cx.state,
 	  count(o.order_id) as odr_qty,
@@ -117,7 +117,7 @@ limit 1
 ```
 
 7. Determine the month with the highest number of orders.
-```
+```sql
 select 
        to_char ( order_date ,'month') as mnts,
 	   extract(month from order_date ) as mnt_num,
@@ -129,7 +129,7 @@ order by 3 desc
 ```
 
 8. Calculate the profit margin percentage for each sale (Profit divided by Sales).
-```
+```sql
 select order_id,
        (sale-org_cogs)* 100 /sale::numeric  as profit_margin_percet
 from 
@@ -144,7 +144,7 @@ on o.product_id = p.product_id) as t1
 ```
 
 9. Calculate the percentage contribution of each sub-category.
-```
+```sql
 with cte1 
 as 
 (
