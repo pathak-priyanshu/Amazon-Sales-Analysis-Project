@@ -79,6 +79,58 @@ limit 5
 
 4. Determine the top 5 products whose revenue has decreased compared to the previous year.
 ```sql
+WITH product_revenue AS (
+    SELECT 
+        o.product_id,
+        p.product_name,
+        EXTRACT(YEAR FROM o.order_date) AS year,
+        SUM(o.sale) AS revenue
+    FROM 
+        orders o
+    JOIN 
+        products p ON o.product_id = p.product_id
+    GROUP BY 
+        o.product_id, p.product_name, EXTRACT(YEAR FROM o.order_date)
+		
+),
+revenue_change AS (
+    SELECT 
+        product_id,
+        product_name,
+        year,
+        revenue,
+        LAG(revenue) OVER (PARTITION BY product_id ORDER BY year) AS prev_year_revenue,
+        revenue - LAG(revenue) OVER (PARTITION BY product_id ORDER BY year) AS revenue_change
+    FROM 
+        product_revenue
+    WHERE 
+        year = EXTRACT(YEAR FROM CURRENT_DATE) - 1  -- Compare with the previous year
+),
+row_num_Rnk as 
+(
+	SELECT 
+    	product_id,
+    	product_name,
+    	year,
+    	revenue,
+    	prev_year_revenue,
+    	revenue_change,
+		ROW_NUMBER() OVER (ORDER BY revenue - revenue_change) as rnks
+FROM 
+    revenue_change
+)
+SELECT 
+    	product_id,
+    	product_name,
+    	year,
+    	revenue,
+    	prev_year_revenue,
+    	revenue_change,rnks
+from row_num_Rnk		
+WHERE 
+    rnks <= 5 AND revenue_change < 0
+ORDER BY 
+    revenue_change;
 
 ```
 
