@@ -217,6 +217,40 @@ order by 3 desc
 10. Identify the top 2 categories that have received maximum returns and their return
 percentage.
 ```sql
+WITH category_sales AS (
+    SELECT 
+        category,
+        SUM(sale) AS total_sales,
+        COUNT(DISTINCT o.order_id) AS total_orders
+    FROM 
+        orders o
+    GROUP BY 
+        category
+),
+category_returns AS (
+    SELECT 
+        o.category,
+        COUNT(DISTINCT r.return_id) AS total_returns
+    FROM 
+        returns r
+    JOIN 
+        orders o ON r.order_id = o.order_id
+    GROUP BY 
+        o.category
+)
+SELECT 
+    cs.category,
+    cs.total_sales,
+    cr.total_returns,
+    cs.total_orders,
+    (cr.total_returns::FLOAT / cs.total_orders) * 100 AS return_percentage
+FROM 
+    category_sales as cs
+JOIN 
+    category_returns cr ON cs.category = cr.category
+ORDER BY 
+    return_percentage DESC
+LIMIT 2;
 
 ```
 
